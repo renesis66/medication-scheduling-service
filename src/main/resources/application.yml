@@ -1,0 +1,48 @@
+micronaut:
+  application:
+    name: medication-scheduling-service
+  server:
+    port: 8080
+    cors:
+      enabled: true
+      configurations:
+        web:
+          allowed-origins:
+            - "http://localhost:5173"
+          allowed-methods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          allowed-headers:
+            - Content-Type
+            - Authorization
+            - Accept
+          allow-credentials: true
+          max-age: 3600
+  jackson:
+    date-format: "yyyy-MM-dd'T'HH:mm:ss'Z'"
+    time-zone: UTC
+
+aws:
+  region: us-east-1
+  dynamodb:
+    endpoint: http://localhost:8000 # DynamoDB Local endpoint
+    
+dynamodb:
+  local:
+    port: 8000
+    shared-db: false
+    in-memory: true
+    db-path: null # Use in-memory by default
+    
+logging:
+  level:
+    com.medscheduler: DEBUG
+    software.amazon.awssdk: WARN
+    
+endpoints:
+  health:
+    enabled: true
+    sensitive: false

@@ -1,0 +1,14 @@
+micronaut:
+  application:
+    name: medication-scheduling-service-test
+  environments: test
+  server:
+    port: -1  # Random port for tests
+
+# Mock configuration for testing
+# Repository implementations are replaced with in-memory mocks
+
+logging:
+  level:
+    com.medscheduler: DEBUG
+    root: INFO

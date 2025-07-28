@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Micronaut
+.micronaut/
+
+# Logs
+*.log
+
+# Test resources
+/test-resources/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local environment
+.env
+.env.local
