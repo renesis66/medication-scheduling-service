@@ -7,7 +7,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.medscheduler"
+group = "com.healthcare.medication.scheduling"
 
 val kotlinVersion = project.properties.get("kotlinVersion")
 repositories {
@@ -51,7 +51,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.medscheduler.ApplicationKt")
+    mainClass.set("com.healthcare.medication.scheduling.ApplicationKt")
 }
 
 java {

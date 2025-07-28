@@ -1,6 +1,6 @@
-package com.medscheduler.repository
+package com.healthcare.medication.scheduling.repository
 
-import com.medscheduler.model.Schedule
+import com.healthcare.medication.scheduling.model.Schedule
 import kotlinx.datetime.LocalDate
 import java.util.*
 

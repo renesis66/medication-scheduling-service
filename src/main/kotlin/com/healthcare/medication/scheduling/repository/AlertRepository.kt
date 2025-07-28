@@ -1,7 +1,7 @@
-package com.medscheduler.repository
+package com.healthcare.medication.scheduling.repository
 
-import com.medscheduler.model.Alert
-import com.medscheduler.model.AlertStatus
+import com.healthcare.medication.scheduling.model.Alert
+import com.healthcare.medication.scheduling.model.AlertStatus
 
 interface AlertRepository {
     suspend fun findById(alertId: String): Alert?

@@ -1,8 +1,8 @@
-package com.medscheduler.controller
+package com.healthcare.medication.scheduling.controller
 
-import com.medscheduler.model.Alert
-import com.medscheduler.model.Schedule
-import com.medscheduler.service.ScheduleService
+import com.healthcare.medication.scheduling.model.Alert
+import com.healthcare.medication.scheduling.model.Schedule
+import com.healthcare.medication.scheduling.service.ScheduleService
 import io.micronaut.http.annotation.*
 import kotlinx.datetime.LocalDate
 import java.util.*

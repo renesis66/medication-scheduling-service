@@ -1,4 +1,4 @@
-package com.medscheduler
+package com.healthcare.medication.scheduling
 
 import io.micronaut.runtime.Micronaut.run
 

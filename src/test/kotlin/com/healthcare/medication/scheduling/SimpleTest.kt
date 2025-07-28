@@ -1,4 +1,4 @@
-package com.medscheduler
+package com.healthcare.medication.scheduling
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
