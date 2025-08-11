@@ -1,4 +1,4 @@
-package com.medscheduler.model
+package com.healthcare.medication.scheduling.model
 
 import io.micronaut.serde.annotation.Serdeable
 import kotlinx.datetime.Instant

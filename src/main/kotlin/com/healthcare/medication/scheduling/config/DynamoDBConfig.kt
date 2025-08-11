@@ -1,4 +1,4 @@
-package com.medscheduler.config
+package com.healthcare.medication.scheduling.config
 
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory

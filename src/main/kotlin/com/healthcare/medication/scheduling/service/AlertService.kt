@@ -1,8 +1,8 @@
-package com.medscheduler.service
+package com.healthcare.medication.scheduling.service
 
-import com.medscheduler.model.Alert
-import com.medscheduler.model.AlertStatus
-import com.medscheduler.repository.AlertRepository
+import com.healthcare.medication.scheduling.model.Alert
+import com.healthcare.medication.scheduling.model.AlertStatus
+import com.healthcare.medication.scheduling.repository.AlertRepository
 import jakarta.inject.Singleton
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
