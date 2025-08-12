@@ -6,14 +6,104 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Micronaut-based medication scheduling service built with Kotlin, designed as part of a microservices architecture for healthcare management. The service handles patient medication schedules, alerts, and time-based care coordination.
 
+## Service Startup Commands
+
+### Prerequisites
+- Java 17+
+- Docker or Rancher Desktop (for DynamoDB Local)
+
+### Quick Start (Known Issues)
+
+**⚠️ CURRENT STATUS: Service has complex startup errors**
+
+#### Step 1: Test Service (Works)
+```bash
+# Run tests to verify service works
+./gradlew test
+```
+
+#### Step 2: Start Docker/Rancher Desktop
+```bash
+open -a "Rancher Desktop"
+# Wait for Rancher Desktop to fully start (may take 30-60 seconds)
+```
+
+#### Step 3: Start DynamoDB Local and Create Table (If Needed)
+```bash
+# Start DynamoDB Local (if not already running from other services)
+docker-compose up -d dynamodb-local
+
+# Create medication-scheduling table (may need to be created)
+aws dynamodb create-table \
+    --table-name medication-scheduling \
+    --attribute-definitions \
+        AttributeName=PK,AttributeType=S \
+        AttributeName=SK,AttributeType=S \
+    --key-schema \
+        AttributeName=PK,KeyType=HASH \
+        AttributeName=SK,KeyType=RANGE \
+    --provisioned-throughput \
+        ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --endpoint-url http://localhost:8000 \
+    --region us-east-1
+```
+
+#### Step 4: Attempt to Start Service (Currently Fails)
+```bash
+# Check if port 8080 is in use
+lsof -i :8080
+
+# Start on custom port to avoid conflicts
+MICRONAUT_SERVER_PORT=8084 ./gradlew run
+```
+
+### Known Issues
+
+#### Complex Startup Error:
+The service fails during startup with complex bean configuration and serialization errors.
+
+**Error Symptoms:**
+- Long stack traces with serialization issues
+- Bean context startup failures
+- Multiple configuration conflicts
+
+**Potential Causes:**
+1. Dependency version conflicts
+2. Configuration issues with DynamoDB or other beans
+3. Missing required configuration properties
+4. Serialization/deserialization configuration problems
+
+**Potential Solutions** (not yet implemented):
+1. Review and update dependency versions
+2. Simplify configuration and remove conflicting beans
+3. Add missing configuration properties
+4. Debug step-by-step with isolated components
+
+### Troubleshooting
+
+1. **Service fails during startup:**
+   - Check dependency versions in build.gradle.kts
+   - Review configuration files for conflicts
+   - Try running with different environments
+
+2. **Port conflicts:**
+   ```bash
+   lsof -i :8080
+   kill <PID>
+   # Or use: MICRONAUT_SERVER_PORT=8084 ./gradlew run
+   ```
+
 ## Development Commands
 
-### Build and Run
-- `./gradlew run` - Start the application (runs on port 8080)
-- `./gradlew build` - Build the project
-- `./gradlew clean build` - Clean build
+### Known Working Commands
+```bash
+./gradlew test              # ✅ All tests pass
+./gradlew build             # ✅ Build succeeds  
+./gradlew run               # ❌ Fails with startup errors
+./gradlew clean build       # ✅ Clean build works
+```
 
-### Testing
+### Testing Commands
 - `./gradlew test` - Run all tests
 - `./gradlew test --tests "ClassName"` - Run specific test class
 - `./gradlew test --tests "ClassName.methodName"` - Run specific test method
