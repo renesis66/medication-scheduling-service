@@ -12,9 +12,9 @@ This is a Micronaut-based medication scheduling service built with Kotlin, desig
 - Java 17+
 - Docker or Rancher Desktop (for DynamoDB Local)
 
-### Quick Start (Known Issues)
+### Quick Start
 
-**⚠️ CURRENT STATUS: Service has complex startup errors**
+**✅ CURRENT STATUS: Service starts successfully with DynamoDB bean conflicts resolved**
 
 #### Step 1: Test Service (Works)
 ```bash
@@ -22,18 +22,18 @@ This is a Micronaut-based medication scheduling service built with Kotlin, desig
 ./gradlew test
 ```
 
-#### Step 2: Start Docker/Rancher Desktop
+#### Step 2: Start Docker/Rancher Desktop (Optional for testing without DynamoDB)
 ```bash
 open -a "Rancher Desktop"
 # Wait for Rancher Desktop to fully start (may take 30-60 seconds)
 ```
 
-#### Step 3: Start DynamoDB Local and Create Table (If Needed)
+#### Step 3: Start DynamoDB Local and Create Table (Optional)
 ```bash
 # Start DynamoDB Local (if not already running from other services)
 docker-compose up -d dynamodb-local
 
-# Create medication-scheduling table (may need to be created)
+# Create medication-scheduling table (if needed for production mode)
 aws dynamodb create-table \
     --table-name medication-scheduling \
     --attribute-definitions \
@@ -48,50 +48,45 @@ aws dynamodb create-table \
     --region us-east-1
 ```
 
-#### Step 4: Attempt to Start Service (Currently Fails)
+#### Step 4: Start Service (Now Works)
 ```bash
-# Check if port 8080 is in use
-lsof -i :8080
+# Service is configured to run on port 8083 by default
+./gradlew run
 
-# Start on custom port to avoid conflicts
-MICRONAUT_SERVER_PORT=8084 ./gradlew run
+# Test service is running
+curl http://localhost:8083/
 ```
 
-### Known Issues
+### Recent Fixes Applied ✅
 
-#### Complex Startup Error:
-The service fails during startup with complex bean configuration and serialization errors.
+#### DynamoDB Configuration Issues Resolved:
+The service startup issues have been resolved by implementing service-specific DynamoDB qualifiers as required by the microservices architecture.
 
-**Error Symptoms:**
-- Long stack traces with serialization issues
-- Bean context startup failures
-- Multiple configuration conflicts
+**Changes Made:**
+- Added `@MedicationSchedulingDynamoDb` qualifier annotation for service-specific DynamoDB beans
+- Updated DynamoDB configuration with `@Requires(notEnv = ["test"])` for production isolation
+- Removed hardcoded credentials to match medication-catalog-service pattern
+- Set default service port to 8083 to avoid conflicts
 
-**Potential Causes:**
-1. Dependency version conflicts
-2. Configuration issues with DynamoDB or other beans
-3. Missing required configuration properties
-4. Serialization/deserialization configuration problems
-
-**Potential Solutions** (not yet implemented):
-1. Review and update dependency versions
-2. Simplify configuration and remove conflicting beans
-3. Add missing configuration properties
-4. Debug step-by-step with isolated components
+**Benefits:**
+- Service can now run alongside other microservices without bean conflicts
+- Follows CLAUDE.md microservices standards
+- Clean startup without DynamoDB dependency injection issues
+- Consistent configuration pattern across services
 
 ### Troubleshooting
 
-1. **Service fails during startup:**
-   - Check dependency versions in build.gradle.kts
-   - Review configuration files for conflicts
-   - Try running with different environments
-
-2. **Port conflicts:**
+1. **Port conflicts:**
    ```bash
-   lsof -i :8080
+   lsof -i :8083
    kill <PID>
-   # Or use: MICRONAUT_SERVER_PORT=8084 ./gradlew run
+   # Or use a different port: MICRONAUT_SERVER_PORT=8084 ./gradlew run
    ```
+
+2. **Service startup issues (historical - now resolved):**
+   - DynamoDB bean conflicts were resolved with service-specific qualifiers
+   - If you encounter similar issues, ensure `@MedicationSchedulingDynamoDb` qualifier is used
+   - Verify `@Requires(notEnv = ["test"])` is present on production beans
 
 ## Development Commands
 
@@ -99,7 +94,7 @@ The service fails during startup with complex bean configuration and serializati
 ```bash
 ./gradlew test              # ✅ All tests pass
 ./gradlew build             # ✅ Build succeeds  
-./gradlew run               # ❌ Fails with startup errors
+./gradlew run               # ✅ Starts successfully on port 8083
 ./gradlew clean build       # ✅ Clean build works
 ```
 
