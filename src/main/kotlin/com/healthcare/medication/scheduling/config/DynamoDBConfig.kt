@@ -2,9 +2,7 @@ package com.healthcare.medication.scheduling.config
 
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
-import io.micronaut.context.annotation.Value
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
+import io.micronaut.context.annotation.Requires
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
@@ -12,28 +10,23 @@ import jakarta.inject.Singleton
 import java.net.URI
 
 @Factory
+@Requires(notEnv = ["test"])
 class DynamoDBConfig {
 
     @Bean
     @Singleton
-    fun dynamoDbClient(
-        @Value("\${aws.region}") region: String,
-        @Value("\${aws.dynamodb.endpoint}") endpoint: String
-    ): DynamoDbClient {
+    @MedicationSchedulingDynamoDb
+    fun dynamoDbClient(): DynamoDbClient {
         return DynamoDbClient.builder()
-            .region(Region.of(region))
-            .endpointOverride(URI.create(endpoint))
-            .credentialsProvider(
-                StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create("dummy", "dummy")
-                )
-            )
+            .region(Region.US_EAST_1)
+            .endpointOverride(URI.create("http://localhost:8000")) // For local DynamoDB
             .build()
     }
 
     @Bean
     @Singleton
-    fun dynamoDbEnhancedClient(dynamoDbClient: DynamoDbClient): DynamoDbEnhancedClient {
+    @MedicationSchedulingDynamoDb
+    fun dynamoDbEnhancedClient(@MedicationSchedulingDynamoDb dynamoDbClient: DynamoDbClient): DynamoDbEnhancedClient {
         return DynamoDbEnhancedClient.builder()
             .dynamoDbClient(dynamoDbClient)
             .build()
